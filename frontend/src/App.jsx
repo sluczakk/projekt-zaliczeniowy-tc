@@ -6,6 +6,7 @@ import './App.css'
 import { useEffect } from "react";
 import products from "./products.json"
 
+// test
 function App() 
 {
 	const [count, setCount] = useState(0)
