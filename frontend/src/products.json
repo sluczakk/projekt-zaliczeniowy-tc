@@ -1,0 +1,242 @@
+[
+  {
+    "itemid": 1,
+    "title": "Iron Sword",
+    "shortDescription": "A simple iron blade used by novice adventurers.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "quantity": 28,
+    "price": 25
+  },
+  {
+    "itemid": 2,
+    "title": "Steel Dagger",
+    "shortDescription": "A lightweight dagger favored by assassins.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+    "quantity": 17,
+    "price": 18
+  },
+  {
+    "itemid": 3,
+    "title": "Glass Bow",
+    "shortDescription": "A refined bow crafted from malachite glass.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse.",
+    "quantity": 7,
+    "price": 220
+  },
+  {
+    "itemid": 4,
+    "title": "Daedric Helmet",
+    "shortDescription": "A terrifying helmet forged in Oblivion.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident.",
+    "quantity": 5,
+    "price": 480
+  },
+  {
+    "itemid": 5,
+    "title": "Elven Armor",
+    "shortDescription": "Elegant golden armor worn by Altmer warriors.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit.",
+    "quantity": 9,
+    "price": 350
+  },
+  {
+    "itemid": 6,
+    "title": "Nordic Shield",
+    "shortDescription": "A shield decorated with Nordic patterns.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nemo enim ipsam voluptatem quia voluptas sit.",
+    "quantity": 14,
+    "price": 140
+  },
+  {
+    "itemid": 7,
+    "title": "Dragonbone Greatsword",
+    "shortDescription": "A massive blade crafted from dragon bones.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. At vero eos et accusamus et iusto odio dignissimos.",
+    "quantity": 4,
+    "price": 620
+  },
+  {
+    "itemid": 8,
+    "title": "Potion of Healing",
+    "shortDescription": "Restores health over time.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Temporibus autem quibusdam et aut officiis debitis.",
+    "quantity": 38,
+    "price": 12
+  },
+  {
+    "itemid": 9,
+    "title": "Potion of Magicka",
+    "shortDescription": "Restores magicka for spellcasters.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Itaque earum rerum hic tenetur a sapiente delectus.",
+    "quantity": 33,
+    "price": 14
+  },
+  {
+    "itemid": 10,
+    "title": "Scroll of Fireball",
+    "shortDescription": "A scroll that unleashes a fiery explosion.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis autem vel eum iure reprehenderit.",
+    "quantity": 11,
+    "price": 45
+  },
+  {
+    "itemid": 11,
+    "title": "Black Soul Gem",
+    "shortDescription": "A gem capable of trapping human souls.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam libero tempore, cum soluta nobis est eligendi.",
+    "quantity": 6,
+    "price": 90
+  },
+  {
+    "itemid": 12,
+    "title": "Amulet of Talos",
+    "shortDescription": "A sacred amulet dedicated to Talos.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et harum quidem rerum facilis est et expedita.",
+    "quantity": 8,
+    "price": 160
+  },
+  {
+    "itemid": 13,
+    "title": "Ring of Namira",
+    "shortDescription": "A Daedric artifact tied to decay.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Neque porro quisquam est qui dolorem ipsum.",
+    "quantity": 3,
+    "price": 500
+  },
+  {
+    "itemid": 14,
+    "title": "Dwemer Cog",
+    "shortDescription": "A mysterious Dwemer mechanical component.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quia consequuntur magni dolores eos.",
+    "quantity": 21,
+    "price": 60
+  },
+  {
+    "itemid": 15,
+    "title": "Falmer Bow",
+    "shortDescription": "A strange bow used by the Falmer.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Qui ratione voluptatem sequi nesciunt.",
+    "quantity": 12,
+    "price": 120
+  },
+  {
+    "itemid": 16,
+    "title": "Staff of Magnus",
+    "shortDescription": "An ancient staff with immense magical power.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minima veniam.",
+    "quantity": 4,
+    "price": 750
+  },
+  {
+    "itemid": 17,
+    "title": "Mehrunes' Razor",
+    "shortDescription": "A dagger capable of instantly killing enemies.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis autem vel eum iure reprehenderit.",
+    "quantity": 3,
+    "price": 900
+  },
+  {
+    "itemid": 18,
+    "title": "Skull of Corruption",
+    "shortDescription": "A staff that feeds on dreams and nightmares.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus.",
+    "quantity": 5,
+    "price": 520
+  },
+  {
+    "itemid": 19,
+    "title": "Dragon Priest Mask",
+    "shortDescription": "An ancient mask worn by powerful priests.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Accusantium doloremque laudantium.",
+    "quantity": 6,
+    "price": 410
+  },
+  {
+    "itemid": 20,
+    "title": "Chaurus Chitin Armor",
+    "shortDescription": "Armor crafted from hardened chaurus shells.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Totam rem aperiam eaque ipsa quae.",
+    "quantity": 9,
+    "price": 280
+  },
+  {
+    "itemid": 21,
+    "title": "Silver Sword",
+    "shortDescription": "A blade effective against undead creatures.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Inventore veritatis et quasi architecto.",
+    "quantity": 16,
+    "price": 95
+  },
+  {
+    "itemid": 22,
+    "title": "Orcish War Axe",
+    "shortDescription": "A brutal axe favored by Orc warriors.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Beatae vitae dicta sunt explicabo.",
+    "quantity": 10,
+    "price": 175
+  },
+  {
+    "itemid": 23,
+    "title": "Ebony Shield",
+    "shortDescription": "A heavy shield forged from ebony metal.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nemo enim ipsam voluptatem.",
+    "quantity": 6,
+    "price": 340
+  },
+  {
+    "itemid": 24,
+    "title": "Mage Robes",
+    "shortDescription": "Robes that increase magical power.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis.",
+    "quantity": 18,
+    "price": 130
+  },
+  {
+    "itemid": 25,
+    "title": "Lockpick Set",
+    "shortDescription": "Essential tools for opening locked doors.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. At vero eos et accusamus.",
+    "quantity": 35,
+    "price": 8
+  },
+  {
+    "itemid": 26,
+    "title": "Torch",
+    "shortDescription": "Provides light in dark caves.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Temporibus autem quibusdam.",
+    "quantity": 40,
+    "price": 5
+  },
+  {
+    "itemid": 27,
+    "title": "Ancient Nord Helmet",
+    "shortDescription": "Helmet worn by ancient Nordic warriors.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et harum quidem rerum.",
+    "quantity": 13,
+    "price": 110
+  },
+  {
+    "itemid": 28,
+    "title": "Moonstone Ore",
+    "shortDescription": "Rare ore used in Elven equipment.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilis est et expedita.",
+    "quantity": 22,
+    "price": 70
+  },
+  {
+    "itemid": 29,
+    "title": "Soul Trap Scroll",
+    "shortDescription": "Captures the soul of defeated enemies.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis autem vel eum iure.",
+    "quantity": 15,
+    "price": 55
+  },
+  {
+    "itemid": 30,
+    "title": "Vampire Dust",
+    "shortDescription": "Rare alchemy ingredient from vampires.",
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minima veniam.",
+    "quantity": 7,
+    "price": 95
+  }
+]
