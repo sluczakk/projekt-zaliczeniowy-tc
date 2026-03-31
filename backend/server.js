@@ -14,9 +14,10 @@ const path = require("path");
 
 app.use(express.static(path.join(__dirname, "public")));
 
+const dbPath = process.env.DATABASE_PATH || "./database.sqlite";
 
 // baza danych sqlite3
-const db = new sqlite3.Database("./database.sqlite", (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error("DB error:", err.message);
   } else {
@@ -53,11 +54,29 @@ db.serialize(() => {
 // ================= AUTH =================
 
 // rejestracja
+
+function isPasswordStrong(password) {
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&   // duża litera
+    /[a-z]/.test(password) &&   // mała litera
+    /[0-9]/.test(password) &&   // cyfra
+    /[^A-Za-z0-9]/.test(password) // znak specjalny
+  );
+}
+
 app.post("/auth/register", async (req, res) => {
   const { email, password, repeatedpassword } = req.body;
 
   if (password !== repeatedpassword) {
     return res.status(400).json({ message: "Hasła nie pasują" });
+  }
+
+  if (!isPasswordStrong(password)) {
+    return res.status(400).json({
+      message:
+        "Hasło musi mieć min. 8 znaków, dużą literę, małą literę, cyfrę i znak specjalny",
+    });
   }
 
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -88,7 +107,7 @@ app.post("/auth/login", async (req, res) => {
 
   db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
     if (!user) {
-      return res.status(401).json({ message: "Zły email" });
+      return res.status(401).json({ message: "Nie istnieje konto z podanym emailem" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -290,7 +309,7 @@ app.get("/{*splat}", (req, res) => {
 });
 
 // START
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
