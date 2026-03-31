@@ -11,7 +11,7 @@ permissions:
 
 env:
   AZURE_WEBAPP_NAME: projekt-zaliczeniowy-tc-kontener
-  ACR_NAME: projekttccar
+  ACR_NAME: projekttcacr
   IMAGE_NAME: crudapp
 
 jobs:
