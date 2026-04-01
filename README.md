@@ -1,1 +1,1 @@
-test ddd test
+Projekt zaliczeniowy na TCh - Aplikacja CRUD: osobisty organizator zadań
