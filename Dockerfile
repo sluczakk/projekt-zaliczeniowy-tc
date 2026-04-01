@@ -23,5 +23,8 @@ COPY --from=frontend-build /app/dist ./public
 
 RUN mkdir -p /app/database
 
+ENV NODE_ENV=production
+ENV DATABASE_PATH=/home/data/database.sqlite
+
 EXPOSE 3000
 CMD ["node", "server.js"]

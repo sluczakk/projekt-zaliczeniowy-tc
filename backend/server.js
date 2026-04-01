@@ -3,6 +3,7 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sqlite3 = require("sqlite3").verbose();
+const fs = require("fs");
 
 const app = express();
 app.use(cors());
@@ -14,9 +15,12 @@ const path = require("path");
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const dbPath = process.env.DATABASE_PATH || "./database.sqlite";
-
 // baza danych sqlite3
+
+const dbPath = process.env.DATABASE_PATH || "/home/data/database.sqlite";
+
+fs.mkdirSync("/home/data", { recursive: true });
+
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error("DB error:", err.message);
