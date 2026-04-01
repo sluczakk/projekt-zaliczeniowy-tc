@@ -21,7 +21,7 @@ RUN npm ci --omit=dev --build-from-source
 COPY backend/ .
 COPY --from=frontend-build /app/dist ./public
 
-RUN mkdir -p /app/database
+RUN mkdir -p /home/data
 
 ENV NODE_ENV=production
 ENV DATABASE_PATH=/home/data/database.sqlite
