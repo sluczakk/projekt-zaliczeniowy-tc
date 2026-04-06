@@ -47,7 +47,7 @@ function Register({ setUser }) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Registration failed");
+        setError(data.message || "Rejestracja się nie powiodła");
         return;
       }
 

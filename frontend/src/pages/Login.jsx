@@ -46,7 +46,7 @@ function Login({ setUser }) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || "Logowanie się nie powiodło");
         return;
       }
 

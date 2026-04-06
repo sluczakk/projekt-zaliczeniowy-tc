@@ -29,44 +29,44 @@ function App() {
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  console.log("TOKEN:", token);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("TOKEN:", token);
 
-  if (!token) {
-    setAuthChecked(true);
-    return;
-  }
-
-  fetch(`${API_BASE_URL}/auth/verifytoken`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then(async (res) => {
-      //console.log("AUTH /me status:", res.status);
-
-      if (!res.ok) {
-        throw new Error("Nieprawidlowy token");
-      }
-
-      const data = await res.json();
-      //console.log("AUTH /me data:", data);
-      return data;
-    })
-    .then((data) => {
-      setUser(data.user);
-    })
-    .catch((err) => {
-      //console.error("AUTH ERROR:", err);
-      localStorage.removeItem("token");
-      setUser(null);
-    })
-    .finally(() => {
+    if (!token) {
       setAuthChecked(true);
-    });
-}, []);
+      return;
+    }
+
+    fetch(`${API_BASE_URL}/auth/verifytoken`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(async (res) => {
+        //console.log("AUTH /me status:", res.status);
+
+        if (!res.ok) {
+          throw new Error("Nieprawidlowy token");
+        }
+
+        const data = await res.json();
+        //console.log("AUTH /me data:", data);
+        return data;
+      })
+      .then((data) => {
+        setUser(data.user);
+      })
+      .catch((err) => {
+        //console.error("AUTH ERROR:", err);
+        localStorage.removeItem("token");
+        setUser(null);
+      })
+      .finally(() => {
+        setAuthChecked(true);
+      });
+  }, []);
 
   if (!authChecked) {
     return <p>Ładowanie</p>;

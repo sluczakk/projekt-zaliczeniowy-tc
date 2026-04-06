@@ -17,13 +17,13 @@ body {
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* important */
+  align-items: flex-start; 
   padding: 20px 32px;
   background: white;
   border-bottom: 1px solid #ddd;
 }
 
-/* LEFT SIDE (logo + button stacked) */
+
 .header-left {
   display: flex;
   flex-direction: column;
@@ -52,7 +52,7 @@ body {
   background: #1d4ed8;
 }
 
-/* RIGHT SIDE (email + logout stacked) */
+
 .user-section {
   display: flex;
   flex-direction: column;
@@ -95,13 +95,13 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
-  align-items: stretch; /* ensures equal height */
+  align-items: stretch; 
 }
 
 .task-card {
   display: flex;
   flex-direction: column;
-  height: 100%; /* important */
+  height: 100%; 
   background: white;
   border-radius: 14px;
   padding: 6px;

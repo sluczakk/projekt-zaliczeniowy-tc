@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // baza danych sqlite3
 
-const dbPath = process.env.DATABASE_PATH || "/home/data/database.sqlite";
+const dbPath = process.env.DATABASE_PATH || "/home/data/database_crudzadania.sqlite";
 
 fs.mkdirSync("/home/data", { recursive: true });
 
@@ -164,7 +164,7 @@ app.get("/tasks", authMiddleware, (req, res) => {
     (err, rows) => {
       if (err) return res.status(500).json({ message: "DB error" });
 
-      // parse tags JSON
+      // tagi
       const tasks = rows.map((task) => ({
         ...task,
         tags: JSON.parse(task.tags || "[]"),
