@@ -19,7 +19,8 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -70,13 +71,13 @@ jobs:
       - name: Deploy frontend Container App
         uses: azure/container-apps-deploy-action@v2
         with:
-          containerAppName: tc-dbplus-frontend
-          resourceGroup: resourcegroup1
+          containerAppName: ${{ env.FRONTEND_CONTAINER_APP }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
           imageToDeploy: ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
 
       - name: Deploy backend Container App
         uses: azure/container-apps-deploy-action@v2
         with:
-          containerAppName: tc-dbplus-backend
-          resourceGroup: resourcegroup1
+          containerAppName: ${{ env.BACKEND_CONTAINER_APP }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
           imageToDeploy: ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
