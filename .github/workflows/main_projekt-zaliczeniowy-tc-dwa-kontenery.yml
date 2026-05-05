@@ -36,6 +36,9 @@ jobs:
           context: .
           file: ./Dockerfile.frontend
           push: true
+          platforms: linux/amd64
+          provenance: false
+          sbom: false
           tags: |
             ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:latest
             ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
@@ -46,6 +49,9 @@ jobs:
           context: .
           file: ./Dockerfile.backend
           push: true
+          platforms: linux/amd64
+          provenance: false
+          sbom: false
           tags: |
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:latest
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
