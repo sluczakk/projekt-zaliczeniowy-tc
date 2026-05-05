@@ -60,6 +60,13 @@ jobs:
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:latest
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
 
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9B8C3FBDD77F4B03A03161A69BE785F9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CB5D737213554238BDB288BBA04FAD2D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A467FAC0E7804D0A965EC2F126C000A5 }}
+
       - name: Deploy frontend Container App
         uses: azure/container-apps-deploy-action@v2
         with:
