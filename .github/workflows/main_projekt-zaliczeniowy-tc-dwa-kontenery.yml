@@ -61,12 +61,12 @@ jobs:
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:latest
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
 
-      - name: Login to Azure
+      - name: Azure Login frontend
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9B8C3FBDD77F4B03A03161A69BE785F9 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CB5D737213554238BDB288BBA04FAD2D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A467FAC0E7804D0A965EC2F126C000A5 }}
+          client-id: ${{ secrets.TCDBPLUSFRONTEND_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.TCDBPLUSFRONTEND_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.TCDBPLUSFRONTEND_AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy frontend Container App
         uses: azure/container-apps-deploy-action@v2
@@ -74,6 +74,13 @@ jobs:
           containerAppName: ${{ env.FRONTEND_CONTAINER_APP }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           imageToDeploy: ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+
+      - name: Azure Login backend
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.TCDBPLUSBACKEND_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.TCDBPLUSBACKEND_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.TCDBPLUSBACKEND_AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy backend Container App
         uses: azure/container-apps-deploy-action@v2
