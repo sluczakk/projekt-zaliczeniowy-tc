@@ -100,6 +100,10 @@ function Login({ setUser }) {
           </span>
         </div>
       </div>
+
+      <div className="app-version">
+        wersja 1
+      </div>
     </div>
   );
 }

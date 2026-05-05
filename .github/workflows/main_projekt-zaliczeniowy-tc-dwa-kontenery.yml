@@ -73,9 +73,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2D08C5D9E13B4A498B38041A5EA4A739 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AA69E80A2992472DB5E7D7E8FD7B142E }}
 
-      - name: Deploy frontend container app
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          containerAppName: tc-dbplus-frontend
-          resourceGroup: resourcegroup1
-          imageToDeploy: ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+      #- name: Deploy frontend container app
+      #  uses: azure/container-apps-deploy-action@v1
+      #  with:
+      #    containerAppName: tc-dbplus-frontend
+      #    resourceGroup: resourcegroup1
+      #    imageToDeploy: ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
