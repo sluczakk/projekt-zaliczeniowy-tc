@@ -11,14 +11,23 @@ env:
   FRONTEND_IMAGE: tccrud-frontend
   BACKEND_IMAGE: tccrud-backend
 
+  RESOURCE_GROUP: resourcegroup1
+  FRONTEND_CONTAINER_APP: tc-dbplus-frontend
+  BACKEND_CONTAINER_APP: tc-dbplus-backend
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -56,26 +65,16 @@ jobs:
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:latest
             ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
 
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      - name: Update frontend Container App
+        run: |
+          az containerapp update \
+            --name ${{ env.FRONTEND_CONTAINER_APP }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
 
-    needs: build
-    
-    steps:
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_59737136FBF146C395A77474FF5F3A15 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2D08C5D9E13B4A498B38041A5EA4A739 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AA69E80A2992472DB5E7D7E8FD7B142E }}
-
-      #- name: Deploy frontend container app
-      #  uses: azure/container-apps-deploy-action@v1
-      #  with:
-      #    containerAppName: tc-dbplus-frontend
-      #    resourceGroup: resourcegroup1
-      #    imageToDeploy: ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+      - name: Update backend Container App
+        run: |
+          az containerapp update \
+            --name ${{ env.BACKEND_CONTAINER_APP }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
