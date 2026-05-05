@@ -7,6 +7,9 @@ import "./Login.css";
 import API_BASE_URL from "../config";
 
 function Login({ setUser }) {
+  console.log(import.meta.env.MODE);
+  console.log(API_BASE_URL);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -24,6 +27,7 @@ function Login({ setUser }) {
   }, []);
 
   function handleChange(e) {
+
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -102,7 +106,7 @@ function Login({ setUser }) {
       </div>
 
       <div className="app-version">
-        wersja 1.01
+        wersja 1.02
       </div>
     </div>
   );

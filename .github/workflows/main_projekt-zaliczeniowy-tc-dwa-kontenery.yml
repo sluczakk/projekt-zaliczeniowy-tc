@@ -44,6 +44,8 @@ jobs:
           platforms: linux/amd64
           provenance: false
           sbom: false
+          build-args: |
+            VITE_API_URL=/api
           tags: |
             ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:latest
             ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
