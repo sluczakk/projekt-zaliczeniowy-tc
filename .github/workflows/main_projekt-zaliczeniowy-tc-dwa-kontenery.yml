@@ -65,7 +65,7 @@ jobs:
     needs: build
     
     steps:
-    
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -76,6 +76,6 @@ jobs:
       - name: Deploy frontend container app
         uses: azure/container-apps-deploy-action@v1
         with:
-          appName: tc-dbplus-frontend
+          containerAppName: tc-dbplus-frontend
           resourceGroup: resourcegroup1
           imageToDeploy: ${{ env.ACR }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
