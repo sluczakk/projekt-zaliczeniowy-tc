@@ -34,7 +34,7 @@ jobs:
           context: .
           push: true
           tags: projekttcacr.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_38BF90053ED74B51947F05E1E44357F3 }}/tccruddapp:${{ github.sha }}
-          file: ./Dockerfile
+          file: ./Dockerfile.old
 
   deploy:
     runs-on: ubuntu-latest

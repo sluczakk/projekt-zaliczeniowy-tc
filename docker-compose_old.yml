@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.old
+    ports:
+      - "3000:3000"
+    volumes:
+      - sqlite-data:/home/data
+
+volumes:
+  sqlite-data:
