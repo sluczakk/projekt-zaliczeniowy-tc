@@ -106,7 +106,7 @@ function Login({ setUser }) {
       </div>
 
       <div className="app-version">
-        wersja 1.03
+        wersja 1.04
       </div>
     </div>
   );

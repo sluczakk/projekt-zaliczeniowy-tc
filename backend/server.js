@@ -2,58 +2,74 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const sqlite3 = require("sqlite3").verbose();
-const fs = require("fs");
+const sql = require("mssql");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const SECRET_KEY = "your_secret_key";
+// do podpisywania json web tokena
+const SECRET_KEY = process.env.JWT_SECRETKEY;
 
 const path = require("path");
-
 app.use(express.static(path.join(__dirname, "public")));
 
-// baza danych sqlite3
+// informacje do logowania do zasobu azure
+const dbConfig = {
+  server: process.env.DB_SERVER,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  port: Number(process.env.DB_PORT) || 1433,
+  options: {
+    encrypt: true,
+    trustServerCertificate: false,
+  },
+};
 
-const dbPath = process.env.DATABASE_PATH || "/home/data/database_crudzadania.sqlite";
+let pool;
 
-fs.mkdirSync("/home/data", { recursive: true });
+async function initDb() {
+  pool = await sql.connect(dbConfig); // logowanie do zasobu azure
 
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("DB error:", err.message);
-  } else {
-    console.log("Connected to SQLite DB");
-  }
-});
+  console.log("polaczono z Azure SQL");
 
-// tworzymy tabele
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      email TEXT UNIQUE,
-      password TEXT
+  // inicjalizacja tabel
+  await pool.request().query(`
+    IF NOT EXISTS (
+      SELECT * FROM sys.tables WHERE name = 'users'
     )
+    CREATE TABLE users (
+      id INT IDENTITY(1,1) PRIMARY KEY,
+      email NVARCHAR(255) UNIQUE,
+      password NVARCHAR(255)
+    );
   `);
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS tasks (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userid INTEGER,
-      title TEXT,
-      description TEXT,
-      detailedDescription TEXT,
-      priority TEXT,
-      deadline TEXT,
-      tags TEXT,
-      progress TEXT,
-      FOREIGN KEY(userid) REFERENCES users(id)
+  await pool.request().query(`
+    IF NOT EXISTS (
+      SELECT * FROM sys.tables WHERE name = 'tasks'
     )
+    CREATE TABLE tasks (
+      id INT IDENTITY(1,1) PRIMARY KEY,
+      userid INT,
+      title NVARCHAR(255),
+      description NVARCHAR(MAX),
+      detailedDescription NVARCHAR(MAX),
+      priority NVARCHAR(50),
+      deadline NVARCHAR(100),
+      tags NVARCHAR(MAX),
+      progress NVARCHAR(50),
+      FOREIGN KEY (userid) REFERENCES users(id)
+    );
   `);
-});
+
+  console.log("Database tables checked/created");
+}
+
+// routes
+
 
 // ================= AUTH =================
 
@@ -83,35 +99,54 @@ app.post("/auth/register", async (req, res) => {
     });
   }
 
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  try {
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
-  db.run(
-    `INSERT INTO users (email, password) VALUES (?, ?)`,
-    [email, hashedPassword],
-    function (err) {
-      if (err) {
-        return res.status(400).json({ message: "Email już istnieje" });
-      }
+    const result = await pool
+      .request()
+      .input("email", sql.NVarChar(255), email)
+      .input("password", sql.NVarChar(255), hashedPassword)
+      .query(`
+        INSERT INTO users (email, password)
+        OUTPUT INSERTED.id
+        VALUES (@email, @password)
+      `);
 
-      const user = {
-        id: this.lastID,
-        email,
-      };
+    const user = {
+      id: result.recordset[0].id,
+      email,
+    };
 
-      const token = jwt.sign(user, SECRET_KEY, { expiresIn: "7d" });
+    const token = jwt.sign(user, SECRET_KEY, { expiresIn: "7d" });
 
-      res.json({ token, user });
-    }
-  );
+    res.json({ token, user });
+  } catch (err) {
+    console.error(err);
+
+    return res.status(400).json({ message: "Email już istnieje" });
+  }
 });
 
 // logowanie
 app.post("/auth/login", async (req, res) => {
   const { email, password } = req.body;
 
-  db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
+  try {
+    const result = await pool
+      .request()
+      .input("email", sql.NVarChar(255), email)
+      .query(`
+        SELECT *
+        FROM users
+        WHERE email = @email
+      `);
+
+    const user = result.recordset[0];
+
     if (!user) {
-      return res.status(401).json({ message: "Nie istnieje konto z podanym emailem" });
+      return res
+        .status(401)
+        .json({ message: "Nie istnieje konto z podanym emailem" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -128,9 +163,15 @@ app.post("/auth/login", async (req, res) => {
 
     res.json({
       token,
-      user: { id: user.id, email: user.email },
+      user: {
+        id: user.id,
+        email: user.email,
+      },
     });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "DB error" });
+  }
 });
 
 // weryfikacja tokena
@@ -157,42 +198,31 @@ app.get("/auth/verifytoken", authMiddleware, (req, res) => {
 // ================= TASKS =================
 
 // pobierz zadania uzytkownika
-app.get("/tasks", authMiddleware, (req, res) => {
-  db.all(
-    `SELECT * FROM tasks WHERE userid = ?`,
-    [req.user.id],
-    (err, rows) => {
-      if (err) return res.status(500).json({ message: "DB error" });
+app.get("/tasks", authMiddleware, async (req, res) => {
+  try {
+    const result = await pool
+      .request()
+      .input("userid", sql.Int, req.user.id)
+      .query(`
+        SELECT *
+        FROM tasks
+        WHERE userid = @userid
+      `);
 
-      // tagi
-      const tasks = rows.map((task) => ({
-        ...task,
-        tags: JSON.parse(task.tags || "[]"),
-      }));
+    const tasks = result.recordset.map((task) => ({
+      ...task,
+      tags: JSON.parse(task.tags || "[]"),
+    }));
 
-      res.json({ tasks });
-    }
-  );
+    res.json({ tasks });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "DB error" });
+  }
 });
 
-// przyklad braku parametryzacji i zabezpieczen
-/*app.get("/tasks-unsafe", (req, res) => {
-  const { userid } = req.query; 
-
-  const query = `SELECT * FROM tasks WHERE userid = ${userid}`;
-
-  console.log("QUERY:", query);
-
-  db.all(query, [], (err, rows) => {
-    if (err) return res.status(500).json({ message: "DB error" });
-
-    res.json({ tasks: rows });
-  });
-});*/
-
-
 // dodaj zadanie
-app.post("/tasks", authMiddleware, (req, res) => {
+app.post("/tasks", authMiddleware, async (req, res) => {
   const {
     title,
     description,
@@ -203,42 +233,48 @@ app.post("/tasks", authMiddleware, (req, res) => {
     progress,
   } = req.body;
 
-  db.run(
-    `INSERT INTO tasks 
-    (userid, title, description, detailedDescription, priority, deadline, tags, progress)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      req.user.id,
-      title,
-      description,
-      detailedDescription,
-      priority,
-      deadline || "",
-      JSON.stringify(tags || []),
-      progress,
-    ],
-    function (err) {
-      if (err) return res.status(500).json({ message: "DB error" });
+  try {
+    const result = await pool
+      .request()
+      .input("userid", sql.Int, req.user.id)
+      .input("title", sql.NVarChar(255), title)
+      .input("description", sql.NVarChar(sql.MAX), description)
+      .input("detailedDescription", sql.NVarChar(sql.MAX), detailedDescription)
+      .input("priority", sql.NVarChar(50), priority)
+      .input("deadline", sql.NVarChar(100), deadline || "")
+      .input("tags", sql.NVarChar(sql.MAX), JSON.stringify(tags || []))
+      .input("progress", sql.NVarChar(50), progress)
+      .query(`
+        INSERT INTO tasks
+          (userid, title, description, detailedDescription, priority, deadline, tags, progress)
+        OUTPUT INSERTED.id
+        VALUES
+          (@userid, @title, @description, @detailedDescription, @priority, @deadline, @tags, @progress)
+      `);
 
-      res.json({
-        task: {
-          id: this.lastID,
-          userid: req.user.id,
-          title,
-          description,
-          detailedDescription,
-          priority,
-          deadline,
-          tags,
-          progress,
-        },
-      });
-    }
-  );
+    const newId = result.recordset[0].id;
+
+    res.json({
+      task: {
+        id: newId,
+        userid: req.user.id,
+        title,
+        description,
+        detailedDescription,
+        priority,
+        deadline: deadline || "",
+        tags: tags || [],
+        progress,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "DB error" });
+  }
 });
 
 // zaktualizuj zadanie
-app.put("/tasks/:id", authMiddleware, (req, res) => {
+app.put("/tasks/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
 
   const {
@@ -251,69 +287,97 @@ app.put("/tasks/:id", authMiddleware, (req, res) => {
     progress,
   } = req.body;
 
-  db.run(
-    `UPDATE tasks SET 
-      title=?, description=?, detailedDescription=?, priority=?, deadline=?, tags=?, progress=?
-     WHERE id=? AND userid=?`,
-    [
-      title,
-      description,
-      detailedDescription,
-      priority,
-      deadline || "",
-      JSON.stringify(tags || []),
-      progress,
-      id,
-      req.user.id,
-    ],
-    function (err) {
-      if (err) {
-        return res.status(500).json({ message: "DB error" });
-      }
+  try {
+    const result = await pool
+      .request()
+      .input("title", sql.NVarChar(255), title)
+      .input("description", sql.NVarChar(sql.MAX), description)
+      .input("detailedDescription", sql.NVarChar(sql.MAX), detailedDescription)
+      .input("priority", sql.NVarChar(50), priority)
+      .input("deadline", sql.NVarChar(100), deadline || "")
+      .input("tags", sql.NVarChar(sql.MAX), JSON.stringify(tags || []))
+      .input("progress", sql.NVarChar(50), progress)
+      .input("id", sql.Int, id)
+      .input("userid", sql.Int, req.user.id)
+      .query(`
+        UPDATE tasks
+        SET
+          title = @title,
+          description = @description,
+          detailedDescription = @detailedDescription,
+          priority = @priority,
+          deadline = @deadline,
+          tags = @tags,
+          progress = @progress
+        WHERE id = @id AND userid = @userid
+      `);
 
-      if (this.changes === 0) {
-        return res.status(404).json({ message: "Nie znaleziono zadania" });
-      }
-
-      res.json({
-        task: {
-          id: Number(id),
-          userid: req.user.id,
-          title,
-          description,
-          detailedDescription,
-          priority,
-          deadline: deadline || "",
-          tags: tags || [],
-          progress,
-        },
-      });
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: "Nie znaleziono zadania" });
     }
-  );
+
+    res.json({
+      task: {
+        id: Number(id),
+        userid: req.user.id,
+        title,
+        description,
+        detailedDescription,
+        priority,
+        deadline: deadline || "",
+        tags: tags || [],
+        progress,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "DB error" });
+  }
 });
 
 // usun zadanie
-app.delete("/tasks/:id", authMiddleware, (req, res) => {
+app.delete("/tasks/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
 
-  db.run(
-    `DELETE FROM tasks WHERE id=? AND userid=?`,
-    [id, req.user.id],
-    function (err) {
-      if (err) return res.status(500).json({ message: "DB error" });
+  try {
+    const result = await pool
+      .request()
+      .input("id", sql.Int, id)
+      .input("userid", sql.Int, req.user.id)
+      .query(`
+        DELETE FROM tasks
+        WHERE id = @id AND userid = @userid
+      `);
 
-      res.json({ message: "Usunięto zadanie" });
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: "Nie znaleziono zadania" });
     }
-  );
+
+    res.json({ message: "Usunięto zadanie" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "DB error" });
+  }
 });
 
-// serwowanie frontendu na azure
+// do serwowania frontendu na azure
 app.get("/{*splat}", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// START
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// start serwera
+async function startServer() {
+  try {
+    await initDb();
+
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      console.log(`Serwer uruchomiony na porcie ${port}`);
+    });
+  } catch (err) {
+    console.error("Nie udalo sie uruchomic serwera:", err);
+    process.exit(1);
+  }
+}
+
+startServer();
