@@ -65,7 +65,7 @@ async function initDb() {
     );
   `);
 
-  console.log("Database tables checked/created");
+  console.log("Stworzono/sprawdzono tabele SQL");
 }
 
 // routes
