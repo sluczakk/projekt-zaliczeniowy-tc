@@ -3,8 +3,6 @@ import "./Dashboard.css";
 
 import { useState, useEffect } from "react";
 
-import API_BASE_URL  from "../config";
-
 function Dashboard({ user }) 
 {
   // pobieramy zapisane taski
@@ -13,7 +11,7 @@ function Dashboard({ user })
 
     async function loadTasks() {
       try {
-        const res = await fetch(`${API_BASE_URL }/tasks`, {
+        const res = await fetch(`api/tasks`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,7 +43,7 @@ function Dashboard({ user })
 
   // dodaj zadanie na backendzie
   async function createTask(taskData) {
-    const res = await fetch(`${API_BASE_URL }/tasks`, {
+    const res = await fetch(`api/tasks`, {
       method: "POST",
       headers: getAuthHeaders(true),
       body: JSON.stringify(taskData),
@@ -63,7 +61,7 @@ function Dashboard({ user })
   async function updateTask(taskId, taskData) {
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+    const res = await fetch(`api/tasks/${taskId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +81,7 @@ function Dashboard({ user })
 
   // usun zadanie na backendzie
   async function deleteTask(taskId) {
-    const res = await fetch(`${API_URL}/tasks/${taskId}`, {
+    const res = await fetch(`api/tasks/${taskId}`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });

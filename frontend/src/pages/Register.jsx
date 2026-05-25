@@ -4,8 +4,6 @@ import { useEffect } from "react";
 
 import "./Login.css";
 
-import API_BASE_URL from "../config";
-
 function Register({ setUser }) {
   const [form, setForm] = useState({
     email: "",
@@ -36,7 +34,7 @@ function Register({ setUser }) {
     setError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      const res = await fetch(`api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

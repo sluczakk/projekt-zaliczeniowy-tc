@@ -4,11 +4,8 @@ import { useEffect } from "react";
 
 import "./Login.css";
 
-import API_URL from "../config";
-
 function Login({ setUser }) {
   //console.log(import.meta.env.MODE);
-  //console.log(API_URL);
 
   const [form, setForm] = useState({
     email: "",
@@ -39,7 +36,7 @@ function Login({ setUser }) {
     setError("");
 
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +103,7 @@ function Login({ setUser }) {
       </div>
 
       <div className="app-version">
-        wersja 1.04
+        wersja 1.05
       </div>
     </div>
   );
