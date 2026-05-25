@@ -1,3 +1,4 @@
+## do lokalnego testowania
 services:
   backend:
     build:
@@ -12,8 +13,8 @@ services:
       dockerfile: Dockerfile.frontend
     ports:
       - "5173:80"
+    environment:
+      VITE_API_URL: http://localhost:3000/
+      BACKEND_HOST: localhost:3000/
     depends_on:
       - backend
-
-volumes:
-  sqlite-data:

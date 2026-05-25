@@ -4,11 +4,11 @@ import { useEffect } from "react";
 
 import "./Login.css";
 
-import API_BASE_URL from "../config";
+import API_URL from "../config";
 
 function Login({ setUser }) {
-  console.log(import.meta.env.MODE);
-  console.log(API_BASE_URL);
+  //console.log(import.meta.env.MODE);
+  //console.log(API_URL);
 
   const [form, setForm] = useState({
     email: "",
@@ -39,7 +39,7 @@ function Login({ setUser }) {
     setError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

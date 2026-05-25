@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import API_BASE_URL from "./config";
+import API_URL from "./config";
 
 // Jezeli uzytkownik nie jest zalogowany, idz do panelu logowania
 function ProtectedRoute({ user, children }) {

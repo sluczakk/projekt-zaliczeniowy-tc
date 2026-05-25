@@ -3,7 +3,7 @@ import "./Dashboard.css";
 
 import { useState, useEffect } from "react";
 
-import API_BASE_URL from "../config";
+import API_BASE_URL  from "../config";
 
 function Dashboard({ user }) 
 {
@@ -13,7 +13,7 @@ function Dashboard({ user })
 
     async function loadTasks() {
       try {
-        const res = await fetch(`${API_BASE_URL}/tasks`, {
+        const res = await fetch(`${API_BASE_URL }/tasks`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,7 +45,7 @@ function Dashboard({ user })
 
   // dodaj zadanie na backendzie
   async function createTask(taskData) {
-    const res = await fetch(`${API_BASE_URL}/tasks`, {
+    const res = await fetch(`${API_BASE_URL }/tasks`, {
       method: "POST",
       headers: getAuthHeaders(true),
       body: JSON.stringify(taskData),
@@ -83,7 +83,7 @@ function Dashboard({ user })
 
   // usun zadanie na backendzie
   async function deleteTask(taskId) {
-    const res = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+    const res = await fetch(`${API_URL}/tasks/${taskId}`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });
