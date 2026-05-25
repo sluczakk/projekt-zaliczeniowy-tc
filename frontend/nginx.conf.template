@@ -7,7 +7,7 @@ server {
 
   # API proxy do backendu
   location /api/ {
-    proxy_pass ${VITE_API_URL}/;
+    proxy_pass ${BACKEND_URL}/;
 
     proxy_ssl_server_name on;
 
